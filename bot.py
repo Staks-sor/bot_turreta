@@ -3,15 +3,29 @@ from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 import random
-# from config import TOKEN
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
 
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
+driver = webdriver.Chrome('chromedriver',chrome_options=chrome_options)
+
+driver.get("https://generator-matov.github.io/")
+mat = driver.find_element(By.XPATH, '/html/body/div/div[3]/a[5]').click()
+time.sleep(2)
+elem = driver.find_element(By.XPATH, '//*[@id="mat"]')
+
+# elem1 = driver.find_element_by_class_name("mat")
+print(elem.text)
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
 
-list_mat = ['говно', 'писька', 'жопа', "пидр", "урод"]
-# test = random.choice(list_mat)
+
 
 
 @dp.message_handler(commands=['start'])
@@ -19,8 +33,18 @@ async def process_start_command(message: types.Message):
     await message.reply("Привет!\nНапиши мне что-нибудь!")
 
 @dp.message_handler(commands=['mat'])
-async def process_help_command(message: types.Message):    
-    await message.reply(text = random.choice(list_mat))
+async def process_help_command(message: types.Message): 
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
+driver = webdriver.Chrome('chromedriver',chrome_options=chrome_options)
+
+driver.get("https://generator-matov.github.io/")
+mat = driver.find_element(By.XPATH, '/html/body/div/div[3]/a[5]').click()
+time.sleep(2)
+elem = driver.find_element(By.XPATH, '//*[@id="mat"]')
+    await message.reply(elem.text)
     
 
 @dp.message_handler()
