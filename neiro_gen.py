@@ -172,7 +172,7 @@ def _create_sequences(vector, seq_length, seq_step):
     return np.concatenate(passes)
 
 
-def  shape_for_stateful_rnn(data, batch_size, seq_length, seq_step):
+def shape_for_stateful_rnn(data, batch_size, seq_length, seq_step):
     """
     Reformat our data vector into input and target sequences to feed into our RNN. Tricky with stateful RNNs.
     """
@@ -328,14 +328,14 @@ def generate(model, vectorizer, seed, length=100, diversity=0.5):
 
 if __name__ == "__main__":
 
-    batch_size = 32  # Batch size for each train
-    num_epochs = 1000
+    batch_size = 1  # Batch size for each train
+    num_epochs = 100
     # Number of epochs of training
-    out_len = 20  # Length of the output phrase
-    seq_length = 50  # 50  # Determines, how long phrases will be used for training
+    out_len = 6  # Length of the output phrase
+    seq_length = 10  # 50  # Determines, how long phrases will be used for training
     use_words = False   # Use words instead of characters (slower speed, bigger vocabulary)
-    data_file = "text_habr.txt"  # Source text file
-    seed = "Ты"  # Initial symbol of the text
+    data_file = "my_mat.txt"  # Source text file
+    seed = "Ты "  # Initial symbol of the text
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--text", action="store", required=False, dest="text", help="Input text file")
