@@ -4,7 +4,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
+from generator import func
 
 
 bot = Bot(token=TOKEN)
@@ -19,20 +19,18 @@ async def process_start_command(message: types.Message):
 @dp.message_handler(text=['Хочу мат', 'хочу мат'])
 async def process_help_command(message: types.Message):
 
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome('chromedriver', chrome_options=chrome_options)
-
-    driver.get("https://generator-matov.github.io/")
-    driver.find_element(By.XPATH, '/html/body/div/div[3]/a[5]').click()
-
-    elem = driver.find_element(By.XPATH, '//*[@id="mat"]')
+    # chrome_options = webdriver.ChromeOptions()
+    # chrome_options.add_argument('--headless')
+    # chrome_options.add_argument('--no-sandbox')
+    # chrome_options.add_argument('--disable-dev-shm-usage')
+    # driver = webdriver.Chrome('chromedriver', chrome_options=chrome_options)
+    # driver.get("/home/staks/PycharmProjects/bot_turreta/generator-matov.github.io-master/index.html")
+    # driver.find_element(By.XPATH, '/html/body/div/div[3]/a[5]').click()
+    # elem = driver.find_element(By.XPATH, '//*[@id="mat"]')
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     button_1 = types.KeyboardButton(text='хочу мат')
     keyboard.add(button_1)
-    await message.reply('Ты ' + str.lower(elem.text), reply_markup=keyboard)
+    await message.reply(func(), reply_markup=keyboard)
 
 
 @dp.message_handler()
