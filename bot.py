@@ -1,36 +1,50 @@
-from config_token import TOKEN
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.contrib.middlewares.logging import LoggingMiddleware
+from aiogram.dispatcher.filters import Text
+from config.config_token import TOKEN
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from generator import func
+from generator.generator import *
+from generator.selen_man import *
+from generator.selen_women import *
+import time
 
 
 bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
+dp = Dispatcher(bot, storage=MemoryStorage())
+dp.middleware.setup(LoggingMiddleware())
 
 
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
-    await message.reply("Привет!\nНапиши мне что-нибудь!")
-
-
-@dp.message_handler(text=['Хочу мат', 'хочу мат'])
-async def process_help_command(message: types.Message):
-
-    # chrome_options = webdriver.ChromeOptions()
-    # chrome_options.add_argument('--headless')
-    # chrome_options.add_argument('--no-sandbox')
-    # chrome_options.add_argument('--disable-dev-shm-usage')
-    # driver = webdriver.Chrome('chromedriver', chrome_options=chrome_options)
-    # driver.get("/home/staks/PycharmProjects/bot_turreta/generator-matov.github.io-master/index.html")
-    # driver.find_element(By.XPATH, '/html/body/div/div[3]/a[5]').click()
-    # elem = driver.find_element(By.XPATH, '//*[@id="mat"]')
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    button_1 = types.KeyboardButton(text='хочу мат')
-    keyboard.add(button_1)
-    await message.reply(func(), reply_markup=keyboard)
+    buttons = ["Для парня", "Для девушки"]
+    buttons1 = ["эксперемент для нее", "эксперемент для него"]
+    keyboard.add(*buttons).add(*buttons1)
+    await message.reply("Привет!\n Я бот который будет тебя материть. \n Осталось определится с полом", reply_markup=keyboard)
+
+
+
+
+
+@dp.message_handler(Text(equals="Для парня"))
+async def with_puree(message: types.Message):
+    await message.answer(for_man())
+
+
+@dp.message_handler(Text(equals="Для девушки"))
+async def with_puree(message: types.Message):
+    await message.answer(for_women())
+
+
+@dp.message_handler(Text(equals="эксперемент для нее"))
+async def with_puree(message: types.Message):
+    await message.answer(women())
+
+@dp.message_handler(Text(equals="эксперемент для него"))
+async def with_puree(message: types.Message):
+    await message.answer(man())
 
 
 @dp.message_handler()
@@ -39,4 +53,4 @@ async def echo_message(msg: types.Message):
 
 
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    executor.start_polling(dp, skip_updates=True, timeout=2)
