@@ -9,7 +9,7 @@ from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.types import ChannelParticipantsSearch
 # класс для работы с сообщениями
 from telethon.tl.functions.messages import GetHistoryRequest
-
+import time
 # Считываем учетные данные
 config = configparser.ConfigParser()
 config.read("config.ini")
@@ -19,8 +19,7 @@ api_id = config['Telegram']['api_id']
 api_hash = config['Telegram']['api_hash']
 username = config['Telegram']['username']
 
-client = TelegramClient(username, api_id, api_hash,
-                        )
+client = TelegramClient(username, api_id, api_hash)
 
 client.start()
 
@@ -57,12 +56,13 @@ client.start()
 
 async def dump_all_messages(channel):
     """Записывает json-файл с информацией о всех сообщениях канала/чата"""
-    offset_msg = 0  # номер записи, с которой начинается считывание
+    offset_msg = 1000  # номер записи, с которой начинается считывание
     limit_msg = 100  # максимальное число записей, передаваемых за один раз
 
     all_messages = []  # список всех сообщений
     total_messages = 0
-    total_count_limit = 0  # поменяйте это значение, если вам нужны не все сообщения
+
+    total_count_limit = 1  # поменяйте это значение, если вам нужны не все сообщения
 
     class DateTimeEncoder(json.JSONEncoder):
         '''Класс для сериализации записи дат в JSON'''
@@ -91,16 +91,19 @@ async def dump_all_messages(channel):
         if total_count_limit != 0 and total_messages >= total_count_limit:
             break
 
-    with open('channel_messages.json', 'w', encoding='utf8') as outfile:
+    with open('channel_messages.txt', 'w', encoding='utf8') as outfile:
         json.dump(all_messages, outfile, ensure_ascii=False, cls=DateTimeEncoder)
-
+    print("сохранил")
 
 async def main():
-    url = input("Введите ссылку на канал или чат: ")
+    url = "neural_horo"
     channel = await client.get_entity(url)
     # await dump_all_participants(channel)
     await dump_all_messages(channel)
 
-
-with client:
-    client.loop.run_until_complete(main())
+while True:
+    with client:
+        client.loop.run_until_complete(main())
+        print('Запускаю по новой', datetime.now())
+        time.sleep(30)
+        print('Запустил', datetime.now())
